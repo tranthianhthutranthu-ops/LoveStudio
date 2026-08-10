@@ -1,0 +1,173 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!DOCTYPE html>
+<html lang="vi">
+<head>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Love Page ❤️</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="love-page">
+
+    <div class="stars"></div>
+
+    <canvas id="fireworks"></canvas>
+
+    <div class="love-content">
+
+        <div class="envelope">💌</div>
+
+        
+
+        <div id="story">
+
+    <h1 id="loveTitle"></h1>
+
+    <p id="storyText"></p>
+
+    <button id="yesButton">
+        Đồng ý ❤️
+    </button>
+
+    <button id="thinkButton">
+        Cho mình suy nghĩ 😊
+    </button>
+
+</div>
+
+<button id="openLetter">
+    Mở lời nhắn 💌
+</button>  <div id="celebration">
+
+    <div class="celebration-hearts">
+        ❤️ 💕 ❤️ 💕 ❤️
+    </div>
+
+    <h1>
+        Vậy là chúng ta chính thức rồi nhen❤️
+    </h1>
+
+    <p id="finalMessage">
+        Cảm ơn bạn đã bước vào cuộc sống của mình.
+    </p>
+
+    <div class="final-names">
+        ❤️ <span id="finalMyName"></span>
+        +
+        <span id="finalLoverName"></span> ❤️
+    </div>  
+
+</div>
+
+    </div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+       <script src="script.js"></script>
+
+<script>
+const openLetter = document.getElementById("openLetter");
+
+if (openLetter) {
+
+    openLetter.addEventListener("click", async () => {
+
+        const id = new URLSearchParams(
+            window.location.search
+        ).get("id");
+
+        if (!id) {
+            alert("Không tìm thấy Love ID ❤️");
+            return;
+        }
+
+        try {
+
+            const snapshot = await window.database
+                .ref("lovePages/" + id)
+                .once("value");
+
+            const data = snapshot.val();
+
+            if (!data) {
+                alert("Không tìm thấy lời nhắn ❤️");
+                return;
+            }
+
+            document.getElementById("story").innerHTML = `
+                <h2>${data.to || ""} ❤️</h2>
+                <p>${data.message || ""}</p>
+                <p>– ${data.from || ""}</p>
+            `;
+
+            document
+                .getElementById("celebration")
+                .classList.add("show");
+
+            openLetter.style.display = "none";
+
+        }  catch (error) {
+    console.error("LỖI CHI TIẾT:", error);
+
+    alert(
+        "Lỗi: " + error.message
+    );
+}
+
+    });
+
+}
+
+
+async function shareLovePage() {
+
+    const url = window.location.href;
+
+    try {
+
+        if (navigator.share) {
+
+            await navigator.share({
+                title: "Love Page ❤️",
+                text: "Mình có một điều muốn gửi đến bạn ❤️",
+                url: url
+            });
+
+        } else {
+
+            await navigator.clipboard.writeText(url);
+
+            alert("❤️ Đã copy link Love Page!");
+
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+        try {
+
+            await navigator.clipboard.writeText(url);
+
+            alert("❤️ Đã copy link Love Page!");
+
+        } catch (e) {
+
+            alert(
+                "Không thể chia sẻ. Hãy copy link trên thanh địa chỉ nhé ❤️"
+            );
+
+        }
+
+    }
+
+}
+</script>
+
+</body>
+</html>                                                                                                                                             
